@@ -7,7 +7,7 @@ Vultr provides an api interface to gather data, using the api we pull data from 
 
 ## Configuration
 
-A config file name config.json must be placed in any of current dir, root/.vultrunbound or /etc/vultrunbound/ At minimum the file should have the vultr_token, other settings may be set from cmd arguments or put in the configuration, see the config.json.example
+A config file name config.json must be placed in any of current dir, root/.vultrunbound or /etc/vultrunbound/ At minimum the file should have the vultr_key, other settings may be set from cmd arguments or put in the configuration, see the config.json.example
 
 ## Usage
 

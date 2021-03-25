@@ -1,0 +1,7 @@
+{
+ "output": "hosts",
+ "dnscache": "/tmp/.dnscache",
+ "target": "/etc/hosts",
+ "vultr_key": "ABC123",
+ "debug": false
+}

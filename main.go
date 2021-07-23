@@ -132,19 +132,19 @@ func OutputHosts(entries []DnsEntry){
 
   for _,ent := range entries{
 
+    if(len(ent.Address)<1){
+      continue
+    }
 
     if(short == "yes" ){
 
       str+=ent.Address+" "+ent.Name+"\n"
 
     }else{
-
       str+=ent.Address+" "+ent.ShortName+" "+ent.Name+"\n"
-
     }
-
-
   }
+
   dat := []byte(str)
   err := ioutil.WriteFile(target, dat, 0644)
 

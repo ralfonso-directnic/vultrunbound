@@ -182,7 +182,7 @@ func OutputUnboundControl(entries []DnsEntry){
     }
 
 
-    if len(cache_entries)>0 {
+    if len(cache_entries)>0 && len(entries)>1 {
 
 
 

@@ -3,6 +3,7 @@ package main
 import (
   "context"
   "os"
+  "time"
   "fmt"
   "github.com/vultr/govultr/v2"
   "golang.org/x/oauth2"
@@ -30,7 +31,7 @@ var output string
 var target string
 var dnscache string
 var short string
-
+var debug bool
 
 func main() {
 
@@ -38,6 +39,7 @@ func main() {
   flag.StringVar(&short,"short","no","Omit short format ie just the part without the domain")
   flag.StringVar(&dnscache,"dnscache","./.dnscache","The dns cache file location - used for unbound diff")
   flag.StringVar(&target,"target","/etc/hosts","server or file target depending on context")
+  flag.BoolVar(&debug,"debug",false,"Debug Flag")
   ConfigSetup()
 
 
@@ -46,7 +48,7 @@ func main() {
   log.Println("Starting Up")
 
 
-  if(viper.GetBool("debug")){
+  if(viper.GetBool("debug") || debug==true){
 
     log.SetFlags(log.LstdFlags | log.Lshortfile)
 
@@ -326,17 +328,33 @@ func MakeRequest() ([]DnsEntry,error) {
 
   // Optional changes
   _ = vultrClient.SetBaseURL("https://api.vultr.com")
-  vultrClient.SetUserAgent("vultrunbound")
-  vultrClient.SetRateLimit(500)
+  vultrClient.SetUserAgent("vultrunbound-2")
+  vultrClient.SetRateLimit(100 * time.Millisecond)
+  vultrClient.SetRetryLimit(2)
 
-  listOptions := &govultr.ListOptions{PerPage:1}
+  listOptions := &govultr.ListOptions{PerPage:50}
+
+   if(debug==true){ 
+
+   acc,_ := vultrClient.Account.Get(context.Background())
+
+   log.Printf("%+v\n",acc);
+
+  }
 
   for {
     i, meta, err := vultrClient.Instance.List(context.Background(), listOptions)
     if err != nil {
+      if (debug==true) { 
+		log.Println(err)
+      }
       return nil, err
     }
     for _,it := range i {
+
+      if(debug==true) {
+	log.Printf("%+v\n",i)
+      }
 
       sname,shortname,shortnamep := ShortName(it.Label)
 
